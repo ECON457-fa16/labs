@@ -1,0 +1,251 @@
+---
+title: "ECON457 lab01 R Basic"
+author: "Jon"
+date: "September 13, 2016"
+output: html_document
+---
+
+Some basic information related to R lab01.
+
+## Data type 
+
+R has five basic or "atomic" classes of objects:
+
+character
+
+numeric (real numbers)
+
+integer
+
+complex
+
+logical (True/False)
+
+
+```{r}
+x <- c(0.5, 0.6)       ## numeric
+x <- c(TRUE, FALSE)    ## logical
+x <- c(T, F)           ## logical
+x <- c("a", "b", "c")  ## character
+x <- c(1+0i, 2+4i)     ## complex
+x <- 9:29              ## integer
+```
+
+
+## Data Structure
+
+
+### Vector
+
+
+The most basic type of R object is a vector. Empty vectors can be created with the vector() function. There is really only one rule about vectors in R, which is that A vector can only contain objects of the same class.
+
+You can also use the vector() function to initialize vectors.
+
+
+
+```{r}
+x <- vector("numeric", length = 10) 
+x
+```
+
+
+**A vector can only contain objects of the same class.**
+
+
+
+### Matrix
+
+
+```{r}
+m <- matrix(nrow = 2, ncol = 3) 
+m
+```
+
+
+
+Matrices can be created by column-binding or row-binding with the cbind() and rbind() functions.
+
+
+```{r}
+x <- 1:3
+y <- 10:12
+cbind(x, y)
+```
+
+
+
+```{r}
+rbind(x, y) 
+```
+
+
+
+
+### Data Frames
+
+Data frames are used to store tabular data in R. They are an important type of object in R and are used in a variety of statistical modeling applications. Hadley Wickham's package dplyr has an optimized set of functions designed to work efficiently with data frames.
+
+
+
+```{r}
+x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
+x
+```
+
+```{r}
+nrow(x)
+
+ncol(x)
+
+
+names(x)
+```
+
+| Object     | Set column names | Set row names |
+|------------|------------------|---------------|
+| data frame | names()          | row.names()   |
+| matrix     | colnames()       | rownames()    |
+
+### Indexing
+
+
+Indexing is used to specify the elements of an array. Indexing also allows you to get out certain bits of information from an array. To index into an array, type the name of the array, followed by the index of the element you want in brackets. Note that in R, indices start at 1. 
+
+For a multidimensional array, index by [row,column]
+
+To index an entire row or column, use a colon.
+
+
+
+Below we index into the named y to get out the element in the second row, third column, 6.
+
+
+```{r}
+y <- c( 1,2,3, 4,5,6)
+y <- matrix(y, nrow = 2, ncol = 3, byrow = T)
+y[2,3]
+```
+
+
+Below, we index the entire first row of the array named y.
+
+
+```{r}
+y[1,]
+```
+
+
+
+
+Below, we index the entire second column of the array named y.
+
+
+
+```{r}
+y[,2]
+```
+
+
+## Methods on Objects
+
+A method is a procedure associated with an object. Below is a list of common methods used on arrays.
+
+```{r}
+length(y)
+dim(y)
+str(y)
+attributes(y)
+typeof(y)
+head(y, 1)
+tail(y,1)
+```
+
+
+
+
+
+
+## Mathematical Operations
+
+Below is a list of common mathematical operations that you can perform on numerical types. 
+
++,- ,/ , %, log, sin
+
+
+x + y		performs addition
+x - y		performs subtraction 
+x * y		performs multiplication 
+x / y		performs division
+x ^ y		raises x to the yth power
+x % y 	gives remainder when you divide x by y, same as rem(x,y)
+
+x = y		assigns the variable named "x" to the value y
+x == y	evaluates to a Boolean, true if x equals y, false otherwise
+x != y 	evaluates to a Boolean, true if x does not equal y, false otherwise
+x > y		evaluates to a Boolean, true if x is greater than y, false otherwise
+x < y		evaluates to a Boolean, true if x is less than y, false otherwise
+x <= y	evaluates to a Boolean, true if x is less than or equal to y, false otherwise
+x >= y	evaluates to a Boolean, true if x is greater than or equal to y, false otherwise
+
+x += y	adds y to x, then reassigns x to the new value
+x -= y	subtracts y from x, then reassigns x to the new value
+
+
+
+```{r}
+
+```
+
+
+## Control Structure
+
+
+
+## Control Flow
+
+### Condition  if/elseif/else 
+
+Conditional evaluation allows portions of code to be evaluated or not evaluated depending on the value of a Boolean expression. You do not need all if/elseif/else statements. You can have conditional evaluations with just an if, or just an if/else.
+
+The general structure of conditional evaluation is as follows.
+
+After assigning values to x and y and running the code we obtain the following output.
+
+```{r}
+x =1
+y=2
+if (x<y){
+  print(x)
+}else{
+  print(y)
+}
+
+
+```
+
+
+
+### For Loops 
+
+A for loop allows you to specify the number of iterations for the repeated execution of a code block. They are great when you know how many iterations you want to run. 
+
+The general form of a for loop is shown below. The example shows a for loop that calculates the sum of the integers 1 through 10 and prints the final result. 
+
+Note that to obtain a range of integers, we use the colon : symbol. 
+
+```{r}
+sum = 0
+for(num in 1:10){
+  sum = sum + num
+}
+print(sum)
+```
+
+
+A range of integers, we use the colon : symbol. 
+
+```{r}
+1:10
+```
+
