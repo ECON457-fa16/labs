@@ -7,6 +7,8 @@ output: html_document
 
 Some basic information related to R lab01.
 
+
+
 ## Data type 
 
 R has five basic or "atomic" classes of objects:
@@ -248,4 +250,12 @@ A range of integers, we use the colon : symbol.
 ```{r}
 1:10
 ```
+
+
+### A series of video of R tutorial. 
+
+Each tutorial usually only is 2 minutes long.
+
+http://www.twotorials.com/
+
 
