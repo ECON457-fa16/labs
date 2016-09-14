@@ -104,10 +104,13 @@ ncol(x)
 names(x)
 ```
 
+
+
 | Object     | Set column names | Set row names |
 |------------|------------------|---------------|
 | data frame | names()          | row.names()   |
 | matrix     | colnames()       | rownames()    |
+
 
 ### Indexing
 
@@ -149,6 +152,59 @@ y[,2]
 ```
 
 
+## Load Data from Csv File
+
+R works with many data formats. 
+
+csv file is the most convenient.
+
+
+Load data locally 
+
+
+Download file from [here][3]
+
+
+```{r}
+#pokemon <- read.csv("All_pokemon.csv")
+```
+
+
+
+```{r}
+# require(RCurl)
+# tempfile()
+# remember delete the original pokemon.csv or comment this line
+# temporaryFile <- tempfile()    #    "pokemon.csv"
+# download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv",destfile=temporaryFile, method = "internal")
+# pokemon <- read.csv(temporaryFile)
+
+```
+
+
+or directly from online repository.
+
+
+```{r}
+pokemon <- read.csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
+```
+
+
+```{r}
+head(pokemon)
+```
+
+
+```{r}
+str(pokemon)
+```
+
+
+More information about [pokeman][1] 
+
+![Bulbasaur][2]
+
+
 ## Methods on Objects
 
 A method is a procedure associated with an object. Below is a list of common methods used on arrays.
@@ -172,35 +228,57 @@ tail(y,1)
 
 Below is a list of common mathematical operations that you can perform on numerical types. 
 
-+,- ,/ , %, log, sin
-
 
 x + y		performs addition
+
+
 x - y		performs subtraction 
+
+
 x * y		performs multiplication 
+
+
 x / y		performs division
+
 x ^ y		raises x to the yth power
-x % y 	gives remainder when you divide x by y, same as rem(x,y)
+
+
 
 x = y		assigns the variable named "x" to the value y
+
+
 x == y	evaluates to a Boolean, true if x equals y, false otherwise
+
 x != y 	evaluates to a Boolean, true if x does not equal y, false otherwise
+
+
 x > y		evaluates to a Boolean, true if x is greater than y, false otherwise
+
+
 x < y		evaluates to a Boolean, true if x is less than y, false otherwise
+
+
 x <= y	evaluates to a Boolean, true if x is less than or equal to y, false otherwise
+
+
 x >= y	evaluates to a Boolean, true if x is greater than or equal to y, false otherwise
 
-x += y	adds y to x, then reassigns x to the new value
-x -= y	subtracts y from x, then reassigns x to the new value
+```{r}
+9-4
+9 / 4
+```
+
+
+```{r}
+log(exp(10))
+```
 
 
 
 ```{r}
-
+sin(pi/2)
 ```
 
-
-## Control Structure
 
 
 
@@ -259,3 +337,13 @@ Each tutorial usually only is 2 minutes long.
 http://www.twotorials.com/
 
 
+See what packages we used.
+
+```{r}
+sessionInfo()
+```
+
+
+[1]:http://www.levelbased.com/guides/pokemon-go/pokemon/?q=
+[2]: http://www.levelbased.com/static/images/guides/pokemon-go/1/medium/bulbasaur.png "Bulbasaur"
+[3]: https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv "Pokeman.csv" 
