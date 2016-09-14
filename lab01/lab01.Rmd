@@ -7,7 +7,7 @@ output: html_document
 
 Some basic information related to R lab01.
 
-
+**First set working directory, by "Session -> Set Working Directory" **
 
 ## Data type 
 
@@ -159,7 +159,7 @@ R works with many data formats.
 csv file is the most convenient.
 
 
-Load data locally 
+### Load data locally 
 
 
 Download file from [here][3]
@@ -169,24 +169,38 @@ Download file from [here][3]
 #pokemon <- read.csv("All_pokemon.csv")
 ```
 
-
+Download data by R. 
 
 ```{r}
-# require(RCurl)
-# tempfile()
-# remember delete the original pokemon.csv or comment this line
-# temporaryFile <- tempfile()    #    "pokemon.csv"
-# download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv",destfile=temporaryFile, method = "internal")
-# pokemon <- read.csv(temporaryFile)
+
+if (!file.exists("pokemon.csv")){
+   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "pokemon.csv",method="wininet")
+}
 
 ```
 
+#### Prefered Method
 
-or directly from online repository.
+```{r}
+library(readr) # prefered
+pokemon <- read_csv("pokemon.csv")
+```
+
+```{r}
+head(pokemon)
+```
 
 
 ```{r}
-pokemon <- read.csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
+str(pokemon)
+```
+
+
+
+#### Regular method. 
+
+```{r}
+pokemon <- read.csv("pokemon.csv")
 ```
 
 
@@ -198,6 +212,21 @@ head(pokemon)
 ```{r}
 str(pokemon)
 ```
+
+
+
+
+###  directly from online repository.
+
+#### Prefered Method
+
+```{r}
+library(readr) # prefered
+pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
+```
+
+
+
 
 
 More information about [pokeman][1] 
