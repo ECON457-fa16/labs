@@ -1,257 +1,18 @@
 ---
 title: "ECON457 lab01 R Basic"
 author: "Jon"
-date: "September 13, 2016"
+date: "September 16, 2016"
 output: html_document
+#output: statsr:::statswithr_lab
+
 ---
 
-Some basic information related to R lab01.
+# Basic R
 
-**First set working directory, by "Session -> Set Working Directory" **
+Best to start a new project. 
 
-## Data type 
 
-R has five basic or "atomic" classes of objects:
-
-character
-
-numeric (real numbers)
-
-integer
-
-complex
-
-logical (True/False)
-
-
-```{r}
-x <- c(0.5, 0.6)       ## numeric
-x <- c(TRUE, FALSE)    ## logical
-x <- c(T, F)           ## logical
-x <- c("a", "b", "c")  ## character
-x <- c(1+0i, 2+4i)     ## complex
-x <- 9:29              ## integer
-```
-
-
-## Data Structure
-
-
-### Vector
-
-
-The most basic type of R object is a vector. Empty vectors can be created with the vector() function. There is really only one rule about vectors in R, which is that A vector can only contain objects of the same class.
-
-You can also use the vector() function to initialize vectors.
-
-
-
-```{r}
-x <- vector("numeric", length = 10) 
-x
-```
-
-
-**A vector can only contain objects of the same class.**
-
-
-
-### Matrix
-
-
-```{r}
-m <- matrix(nrow = 2, ncol = 3) 
-m
-```
-
-
-
-Matrices can be created by column-binding or row-binding with the cbind() and rbind() functions.
-
-
-```{r}
-x <- 1:3
-y <- 10:12
-cbind(x, y)
-```
-
-
-
-```{r}
-rbind(x, y) 
-```
-
-
-
-
-### Data Frames
-
-Data frames are used to store tabular data in R. They are an important type of object in R and are used in a variety of statistical modeling applications. Hadley Wickham's package dplyr has an optimized set of functions designed to work efficiently with data frames.
-
-
-
-```{r}
-x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
-x
-```
-
-```{r}
-nrow(x)
-
-ncol(x)
-
-
-names(x)
-```
-
-
-
-| Object     | Set column names | Set row names |
-|------------|------------------|---------------|
-| data frame | names()          | row.names()   |
-| matrix     | colnames()       | rownames()    |
-
-
-### Indexing
-
-
-Indexing is used to specify the elements of an array. Indexing also allows you to get out certain bits of information from an array. To index into an array, type the name of the array, followed by the index of the element you want in brackets. Note that in R, indices start at 1. 
-
-For a multidimensional array, index by [row,column]
-
-To index an entire row or column, use a colon.
-
-
-
-Below we index into the named y to get out the element in the second row, third column, 6.
-
-
-```{r}
-y <- c( 1,2,3, 4,5,6)
-y <- matrix(y, nrow = 2, ncol = 3, byrow = T)
-y[2,3]
-```
-
-
-Below, we index the entire first row of the array named y.
-
-
-```{r}
-y[1,]
-```
-
-
-
-
-Below, we index the entire second column of the array named y.
-
-
-
-```{r}
-y[,2]
-```
-
-
-## Load Data from Csv File
-
-R works with many data formats. 
-
-csv file is the most convenient.
-
-
-### Load data locally 
-
-
-Download file from [here][3]
-
-
-```{r}
-#pokemon <- read.csv("All_pokemon.csv")
-```
-
-Download data by R. 
-
-```{r}
-
-if (!file.exists("pokemon.csv")){
-   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "pokemon.csv",method="wininet")
-}
-
-```
-
-#### Prefered Method
-
-```{r}
-library(readr) # prefered
-pokemon <- read_csv("pokemon.csv")
-```
-
-```{r}
-head(pokemon)
-```
-
-
-```{r}
-str(pokemon)
-```
-
-
-
-#### Regular method. 
-
-```{r}
-pokemon <- read.csv("pokemon.csv")
-```
-
-
-```{r}
-head(pokemon)
-```
-
-
-```{r}
-str(pokemon)
-```
-
-
-
-
-###  directly from online repository.
-
-#### Prefered Method
-
-```{r}
-library(readr) # prefered
-pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
-```
-
-
-
-
-
-More information about [pokeman][1] 
-
-![Bulbasaur][2]
-
-
-## Methods on Objects
-
-A method is a procedure associated with an object. Below is a list of common methods used on arrays.
-
-```{r}
-length(y)
-dim(y)
-str(y)
-attributes(y)
-typeof(y)
-head(y, 1)
-tail(y,1)
-```
-
-
-
-
-
+## Introduction to R Studio
 
 ## Mathematical Operations
 
@@ -311,6 +72,362 @@ sin(pi/2)
 
 
 
+## Data type 
+
+R has five basic or "atomic" classes of objects:
+
+* character
+
+* numeric (real numbers)
+
+* integer
+
+* complex
+
+* logical (True/False)
+
+
+```{r}
+x <- c(0.5, 0.6);  typeof(x)       ## numeric
+x <- c(TRUE, FALSE);  typeof(x)    ## logical
+x <- c(T, F);   typeof(x)         ## logical
+x <- c("a", "b", "c");  typeof(x)   ## character
+x <- c(1+0i, 2+4i);  typeof(x)    ## complex
+x <- 9:29;   typeof(x)            ## integer
+```
+
+
+`":"` operator can create a sequence which is very useful.
+
+
+`seq()` can do similar thing and is more powerful.
+
+```{r}
+seq(9,29, by=2)
+```
+
+
+
+## Data Structure
+
+
+### Vector
+
+
+The most basic type of R object is a vector. Empty vectors can be created with the vector() function or c() function. There is really only one rule about vectors in R, which is that A **vector can only contain objects of the same class**.
+
+You can also use the vector() function to initialize vectors.
+
+
+```{r}
+x <- vector("numeric", length = 10) 
+x
+```
+
+
+Question 1: Generate a vector 
+
+$$a =  (3, 6, 9 ,12) $$
+
+```{r q1}
+# type your code for Question 1 here, and Knit
+
+
+
+
+```
+
+
+
+
+
+**A vector can only contain objects of the same class.**
+
+
+
+**A matrix can only contain objects of the same class.**
+
+
+
+
+### Matrix
+
+Initial a empty matrix
+
+```{r}
+m <- matrix(nrow = 2, ncol = 3) 
+m
+```
+
+**vector -> matrix**
+
+Matrices can be created by column-binding or row-binding with the cbind() and rbind() functions.
+
+
+```{r}
+x <- 1:3
+y <- 10:12
+cbind(x, y)
+```
+
+
+
+```{r}
+rbind(x, y) 
+```
+
+
+Question 2: Generate a matrix  
+
+\begin{matrix}
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9
+\end{matrix}
+
+```{r q2}
+# type your code for Question 1 here, and Knit
+
+
+
+
+```
+
+
+
+
+
+
+### Data Frames
+
+
+Data frames can contain objects of different classes.
+
+Data frames are used to store tabular data in R. They are an important type of object in R and are used in a variety of statistical modeling applications. 
+
+
+
+```{r}
+x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
+x
+```
+
+
+
+## Check what is inside an object
+
+
+```{r}
+length(y)
+dim(y)
+str(y)
+attributes(y)
+typeof(y)
+head(y, 1)
+tail(y,1)
+```
+
+
+More for data frame.
+
+```{r}
+nrow(x)
+
+ncol(x)
+
+names(x)
+```
+
+
+
+Using `str()` function to check `x`.
+
+```{r}
+str(x)
+```
+
+* What class is the `foo` column?
+
+* What class is the `bar` column?
+
+
+** Different classes of data can be in a data frame**
+
+
+
+## Load Data from Csv File
+
+R works with many data formats. 
+
+csv file is the most convenient.
+
+
+### Load data locally 
+
+
+Download file from [here][3]
+
+
+```{r}
+if (!file.exists("All_pokemon.csv")){
+   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "pokemon.csv",method="wininet")
+}
+
+```
+
+
+
+```{r}
+pokemon <- read.csv("All_pokemon.csv")
+```
+
+
+
+Check data
+
+```{r}
+head(pokemon)
+```
+
+
+```{r}
+str(pokemon)
+```
+
+
+
+###  directly from online repository.
+
+
+
+```{r}
+library(readr) # prefered
+pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
+```
+
+
+### Write 
+
+
+More information about [pokeman][1] 
+
+![Bulbasaur][2]
+
+
+
+### Subsetting
+
+
+#### Indexing
+
+
+Indexing is used to specify the elements of an array. Indexing also allows you to get out certain bits of information from an array. To index into an array, type the name of the array, followed by the index of the element you want in brackets. Note that in R, indices start at 1. 
+
+For a multidimensional array, index by [row,column]
+
+To index an entire row or column, use a colon.
+
+Below we index into the named y to get out the element in the second row, third column, 6.
+
+
+```{r}
+y <- c( 1,2,3, 4,5,6)
+y <- matrix(y, nrow = 2, ncol = 3, byrow = T)
+y[2,3]
+```
+
+
+
+If you want to change the value in y[2,3], you can assign a new value to it.
+
+
+```{r}
+y[2,3] <- 7
+y
+```
+
+
+
+Below, we index the entire first row of the array named y.
+
+
+```{r}
+y[1,]
+```
+
+
+Below, we index the entire second column of the array named y.
+
+
+```{r}
+y[,2]
+```
+
+
+#### Subset   by name,
+    
+For data frame, `$` to subset
+
+```{r}
+type2 <- pokemon$Type.II
+head(type2)
+```
+
+
+Look those levels
+
+```{r}
+table(type2)
+```
+
+
+
+
+
+#### Subset by logic indexing or comparison operations
+
+```{r}
+Dragon <-  pokemon[ pokemon$Type.I == "Dragon", ]
+
+head(Dragon)
+
+```
+
+Question 3: Subset pokeman with HP greater than 150  
+
+
+```{r  q3}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+### Write data
+
+
+```{r}
+#if (!file.exists("Dragon.csv")){
+write.csv(Dragon, file="Dragon.csv")
+#}
+```
+
+
+By default R will wrap character vectors with quotation marks when writing out to file. It will also write out the row and column names.
+
+Let's fix this:
+
+
+```{r}
+#if (!file.exists("Dragon.csv")){
+write.csv(Dragon,file="Dragon.csv",
+          quote=FALSE, row.names=FALSE)
+#}
+```
+
+
+
 ## Control Flow
 
 ### Condition  if/elseif/else 
@@ -335,6 +452,19 @@ if (x<y){
 
 
 
+
+Question 4: Write a if else statement to  print larger number in x and y. 
+
+
+```{r  q4}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+
 ### For Loops 
 
 A for loop allows you to specify the number of iterations for the repeated execution of a code block. They are great when you know how many iterations you want to run. 
@@ -352,12 +482,77 @@ print(sum)
 ```
 
 
-A range of integers, we use the colon : symbol. 
 
-```{r}
-1:10
+Question 5: Write a for loop statement to print 1 to 10
+
+
+```{r  q5}
+# type your code for Question 1 here, and Knit
+
+
 ```
 
+
+
+
+## Plot 
+
+```{r}
+x = seq(0, 2*pi, 2*pi/180)
+y = sin(x)
+plot(x,y)
+
+```
+
+
+#### Color, line type, line width and title
+```{r}
+plot(x,y, type = "l", col="blue", lwd="4",
+     main="sin", xlab = "x", ylab = "y")
+```
+
+### Add two lines and a point.
+
+
+```{r}
+plot(x,y, type = "l", col="blue", lwd="4",
+     main="sin", xlab = "x", ylab = "y")
+## the x- and y-axis, and an integer grid
+abline(h = 0, v = pi, col = "gray60")
+points(x=pi, y=0, cex =2, col ="dark red")
+text(x=pi+0.3, y = 0.1, labels = "Here", col = "Red")
+```
+
+
+
+Question 6: Plot pokemon's HP and Atk with green color.
+Change label and title.
+
+
+```{r  q6}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+
+### How to get help
+
+
+```{r}
+?plot
+```
+
+
+
+
+
+
+### Learn by doing
+
+Visit [DataCamp][4] or [Try R][5] to learn how to write basic R code. Both sites provide interactive lessons that will get you writing real code in minutes. They are a great place to make mistakes and test out new skills. You are told immediately when you go wrong and given a chance to fix your code.
 
 ### A series of video of R tutorial. 
 
@@ -376,3 +571,5 @@ sessionInfo()
 [1]:http://www.levelbased.com/guides/pokemon-go/pokemon/?q=
 [2]: http://www.levelbased.com/static/images/guides/pokemon-go/1/medium/bulbasaur.png "Bulbasaur"
 [3]: https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv "Pokeman.csv" 
+[4]:https://www.datacamp.com/
+[5]:http://tryr.codeschool.com/
