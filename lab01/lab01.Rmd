@@ -270,7 +270,7 @@ Download file from [here][3]
 
 ```{r}
 if (!file.exists("All_pokemon.csv")){
-   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "pokemon.csv",method="wininet")
+   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "All_pokemon.csv",method="wininet")
 }
 
 ```
