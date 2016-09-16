@@ -306,8 +306,6 @@ pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_
 ```
 
 
-### Write 
-
 
 More information about [pokeman][1] 
 
@@ -393,7 +391,7 @@ head(Dragon)
 
 ```
 
-Question 3: Subset pokeman with HP greater than 150  
+Question 3: Subset pokeman with HP greater than 150 and write to HP.csv 
 
 
 ```{r  q3}
