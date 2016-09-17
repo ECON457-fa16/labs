@@ -7,7 +7,7 @@ output: html_document
 
 Some basic information related to R lab01.
 
-**First set working directory, by "Session -> Set Working Directory" **
+**First set working directory, by "Session -Set Working Directory" **
 
 ## Data type 
 
@@ -281,7 +281,7 @@ x == y	evaluates to a Boolean, true if x equals y, false otherwise
 x != y 	evaluates to a Boolean, true if x does not equal y, false otherwise
 
 
-x > y		evaluates to a Boolean, true if x is greater than y, false otherwise
+x y		evaluates to a Boolean, true if x is greater than y, false otherwise
 
 
 x < y		evaluates to a Boolean, true if x is less than y, false otherwise
@@ -366,6 +366,222 @@ Each tutorial usually only is 2 minutes long.
 http://www.twotorials.com/
 
 
+## R for ECON
+
+### R for ECON365/366
+
+Matrix transposition
+
+```{r}
+M <- cbind(c(1,0,1),c(0,1,2),c(0,0,1))
+t(M)
+
+```
+
+Matrix inversion
+
+```{r}
+solve(M)
+
+solve(M)%*%M
+```
+
+
+Regression for Salary
+```{r}
+
+```
+
+
+### R for ECON208
+
+Solving a linear equation
+```{r}
+m=matrix(nrow=2,ncol=2,c(1,-.8,1,.2))
+
+l=matrix(c(1.0+25.0/18,25.0/18.0))
+
+(k=solve(m,l))
+
+m%*%k          #checking the answer
+
+
+```
+
+Eigenvalues and eigenvectors
+
+```{r}
+eigen(m)
+```
+
+
+
+### R for ECON350/351
+
+Symbolic calculations
+
+```{r}
+D(expression(x^n),"x")
+D(expression(exp(a*x)),"x")
+```
+
+
+Compute derivatives of simple expressions, symbolically and algorithmically.
+
+
+```{r}
+trig.exp <- expression(sin(cos(x + y^2)))
+
+( D.sc <- D(trig.exp, "x") )
+
+all.equal(D(trig.exp[[1]], "x"), D.sc)
+```
+
+
+
+```{r}
+## formula argument :
+(MU1 <- deriv(~ x1^0.25*x2^0.25, "x1" )) ; 
+(MU2<- deriv(~ x1^0.25*x2^0.25, "x1" ))
+
+mode(MU1)
+x1<- 2
+x2 <- 2
+eval(MU1)
+
+
+
+```
+
+
+
+#### Unconstrained optimization
+
+```{r}
+f <- function(x){(x[1] - 5)^2 + (x[2] - 6)^2}
+initial_x <- c(10, 11)
+x_optimal <- optim(initial_x, f, method="CG")
+x_min <- x_optimal$par
+x_min
+```
+
+## ECON457
+
+#### Equality constraint optimization
+#### Inequality constraint optimization
+#### Linear Programming
+
+
+Maximize expected return: f(x1, x2, x3) = x1*5% + x2*4% + x3*6%
+
+Subjected to constraints:
+    10% < x1, x2, x3 < 100%
+    x1 + x2 + x3 = 1
+    x3 < x1 + x2
+    x1 < 2 * x2
+
+```{r}
+#install.packages("lpSolve")
+#install.packages("lpSolveAPI")
+library(lpSolve)
+library(lpSolveAPI)
+# Set the number of vars
+model <- make.lp(0, 3)
+# Define the object function: for Minimize, use -ve
+set.objfn(model, c(-0.05, -0.04, -0.06))
+# Add the constraints
+add.constraint(model, c(1, 1, 1), "=", 1)
+add.constraint(model, c(1, 1, -1), ">", 0)
+add.constraint(model, c(1, -2, 0), "<", 0)
+# Set the upper and lower bounds
+set.bounds(model, lower=c(0.1, 0.1, 0.1), upper=c(1, 1, 1))
+# Compute the optimized model
+solve(model)
+
+# Get the value of the optimized parameters
+get.variables(model)
+
+# Get the value of the objective function
+get.objective(model)
+
+# Get the value of the constraint
+get.constraints(model)
+```
+
+#### Quadratic Programming
+
+
+To formulate the problem:
+
+Variable: x1 = % investment in A, x2 = % in B, x3 = % in C
+
+Minimize variance: xT∑x
+
+Subjected to constraint:
+x1 + x2 + x3 == 1
+X1*5% + x2*4% + x3*6% >= 5.2%
+0% < x1, x2, x3 < 100%
+
+```{r}
+#install.packages("quadprog")
+library(quadprog)
+mu_return_vector <- c(0.05, 0.04, 0.06) 
+sigma <- matrix(c(0.01, 0.002, 0.005, 
+                   0.002, 0.008, 0.006, 
+                   0.005, 0.006, 0.012), 
+                  nrow=3, ncol=3)
+D.Matrix <- 2*sigma
+d.Vector <- rep(0, 3)
+A.Equality <- matrix(c(1,1,1), ncol=1)
+A.Matrix <- cbind(A.Equality, mu_return_vector, 
+                    diag(3))
+b.Vector <- c(1, 0.052, rep(0, 3))
+out <- solve.QP(Dmat=D.Matrix, dvec=d.Vector, 
+                  Amat=A.Matrix, bvec=b.Vector, 
+                  meq=1)
+out$solution
+
+out$value
+
+```
+
+
+[source][4]
+
+### Ryacas: Symbolic calculation
+
+only works for R 3.3.2
+
+```{r}
+# options(repos = c(CRAN = "http://cran.rstudio.com"))
+# install.packages('Ryacas')
+# library(Ryacas)
+# yacasInstall()
+```
+
+
+
+### R for ECON435/468
+
+http://www.quantmod.com/
+https://www.youtube.com/watch?v=61_F2fcvrsw
+
+```{r}
+install.packages("quantmod")
+library(quantmod)
+getSymbols(c("AMZN"))
+barChart(AMZN,theme='white.mono',bar.type='hlc')
+
+```
+
+
+
+```{r}
+getSymbols(c("^GSPC"))
+chartSeries(GSPC, subset='last 3 months')
+addBBands(n = 20, sd = 2, ma = "SMA", draw = 'bands', on = -1)
+```
+
 See what packages we used.
 
 ```{r}
@@ -376,3 +592,4 @@ sessionInfo()
 [1]:http://www.levelbased.com/guides/pokemon-go/pokemon/?q=
 [2]: http://www.levelbased.com/static/images/guides/pokemon-go/1/medium/bulbasaur.png "Bulbasaur"
 [3]: https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv "Pokeman.csv" 
+[4]: http://horicky.blogspot.ca/2013/01/optimization-in-r.html
