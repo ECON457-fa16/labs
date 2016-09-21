@@ -7,11 +7,13 @@ output: statsr:::statswithr_lab
 
 ---
 
+
 ```{r ,echo=FALSE, include = FALSE}
 #library(devtools)
 #install.packages("httpuv")
 #install_github("StatsWithR/statsr")
 ```
+
 
 
 # Basic R
@@ -134,7 +136,7 @@ x
 ```
 
 
-Question 1: Generate a vector 
+1. Question 1: Generate a vector 
 
 $$a =  (3, 6, 9 ,12) $$
 
@@ -186,7 +188,7 @@ rbind(x, y)
 ```
 
 
-Question 2: Generate a matrix  
+2. Question 2: Generate a matrix  
 
 \begin{matrix}
   1 & 2 & 3 \\
@@ -401,7 +403,8 @@ head(Dragon)
 ```
 
 
-Question 3: Subset pokeman with HP greater than 150 and write to HP.csv 
+3. Question 3: Subset pokeman with HP greater than 150 and write to HP.csv 
+
 
 
 
@@ -462,7 +465,7 @@ if (x<y){
 
 
 
-Question 4: Write a if else statement to  print larger number in x and y. 
+4. Question 4: Write a if else statement to  print larger number in x and y. 
 
 
 ```{r  q4}
@@ -504,7 +507,7 @@ while(z > 0.1){
 ```
 
 
-Question 5: Write a for loop statement to print 1 to 10
+5. Question 5: Write a for loop statement to print 1 to 10
 
 
 ```{r  q5}
@@ -546,7 +549,7 @@ text(x=pi+0.3, y = 0.1, labels = "Here", col = "Red")
 
 
 
-Question 6: Plot pokemon's HP and Atk with green color.
+6. Question 6: Plot pokemon's HP and Atk with green color.
 Change label and title.
 
 
