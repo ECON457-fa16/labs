@@ -1,0 +1,4 @@
+Nat,Pokemon,HP,Atk,Def,SA,SD,Spd,Total,Type.I,Type.II,Gender,Evolves.From,lvl_up,Evolves.Into
+147,Dratini,41,64,45,50,50,50,300,Dragon,,50/50,--,Lv. 30,Dragonair
+148,Dragonair,61,84,65,70,70,70,420,Dragon,,50/50,Dratini,Lv. 55,Dragonite
+149,Dragonite,91,134,95,100,100,80,600,Dragon,Flying,50/50,Dragonair,--,--

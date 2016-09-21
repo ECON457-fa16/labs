@@ -1,257 +1,25 @@
 ---
 title: "ECON457 lab01 R Basic"
 author: "Jon"
-date: "September 13, 2016"
-output: html_document
+date: "September 16, 2016"
+#output: html_document
+output: statsr:::statswithr_lab
+
 ---
 
-Some basic information related to R lab01.
-
-**First set working directory, by "Session -Set Working Directory" **
-
-## Data type 
-
-R has five basic or "atomic" classes of objects:
-
-character
-
-numeric (real numbers)
-
-integer
-
-complex
-
-logical (True/False)
-
-
-```{r}
-x <- c(0.5, 0.6)       ## numeric
-x <- c(TRUE, FALSE)    ## logical
-x <- c(T, F)           ## logical
-x <- c("a", "b", "c")  ## character
-x <- c(1+0i, 2+4i)     ## complex
-x <- 9:29              ## integer
+```{r ,echo=FALSE, include = FALSE}
+#library(devtools)
+#install.packages("httpuv")
+#install_github("StatsWithR/statsr")
 ```
 
 
-## Data Structure
+# Basic R
 
+Best to start a new project. 
 
-### Vector
 
-
-The most basic type of R object is a vector. Empty vectors can be created with the vector() function. There is really only one rule about vectors in R, which is that A vector can only contain objects of the same class.
-
-You can also use the vector() function to initialize vectors.
-
-
-
-```{r}
-x <- vector("numeric", length = 10) 
-x
-```
-
-
-**A vector can only contain objects of the same class.**
-
-
-
-### Matrix
-
-
-```{r}
-m <- matrix(nrow = 2, ncol = 3) 
-m
-```
-
-
-
-Matrices can be created by column-binding or row-binding with the cbind() and rbind() functions.
-
-
-```{r}
-x <- 1:3
-y <- 10:12
-cbind(x, y)
-```
-
-
-
-```{r}
-rbind(x, y) 
-```
-
-
-
-
-### Data Frames
-
-Data frames are used to store tabular data in R. They are an important type of object in R and are used in a variety of statistical modeling applications. Hadley Wickham's package dplyr has an optimized set of functions designed to work efficiently with data frames.
-
-
-
-```{r}
-x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
-x
-```
-
-```{r}
-nrow(x)
-
-ncol(x)
-
-
-names(x)
-```
-
-
-
-| Object     | Set column names | Set row names |
-|------------|------------------|---------------|
-| data frame | names()          | row.names()   |
-| matrix     | colnames()       | rownames()    |
-
-
-### Indexing
-
-
-Indexing is used to specify the elements of an array. Indexing also allows you to get out certain bits of information from an array. To index into an array, type the name of the array, followed by the index of the element you want in brackets. Note that in R, indices start at 1. 
-
-For a multidimensional array, index by [row,column]
-
-To index an entire row or column, use a colon.
-
-
-
-Below we index into the named y to get out the element in the second row, third column, 6.
-
-
-```{r}
-y <- c( 1,2,3, 4,5,6)
-y <- matrix(y, nrow = 2, ncol = 3, byrow = T)
-y[2,3]
-```
-
-
-Below, we index the entire first row of the array named y.
-
-
-```{r}
-y[1,]
-```
-
-
-
-
-Below, we index the entire second column of the array named y.
-
-
-
-```{r}
-y[,2]
-```
-
-
-## Load Data from Csv File
-
-R works with many data formats. 
-
-csv file is the most convenient.
-
-
-### Load data locally 
-
-
-Download file from [here][3]
-
-
-```{r}
-#pokemon <- read.csv("All_pokemon.csv")
-```
-
-Download data by R. 
-
-```{r}
-
-if (!file.exists("pokemon.csv")){
-   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "pokemon.csv",method="wininet")
-}
-
-```
-
-#### Prefered Method
-
-```{r}
-library(readr) # prefered
-pokemon <- read_csv("pokemon.csv")
-```
-
-```{r}
-head(pokemon)
-```
-
-
-```{r}
-str(pokemon)
-```
-
-
-
-#### Regular method. 
-
-```{r}
-pokemon <- read.csv("pokemon.csv")
-```
-
-
-```{r}
-head(pokemon)
-```
-
-
-```{r}
-str(pokemon)
-```
-
-
-
-
-###  directly from online repository.
-
-#### Prefered Method
-
-```{r}
-library(readr) # prefered
-pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
-```
-
-
-
-
-
-More information about [pokeman][1] 
-
-![Bulbasaur][2]
-
-
-## Methods on Objects
-
-A method is a procedure associated with an object. Below is a list of common methods used on arrays.
-
-```{r}
-length(y)
-dim(y)
-str(y)
-attributes(y)
-typeof(y)
-head(y, 1)
-tail(y,1)
-```
-
-
-
-
-
+## Introduction to R Studio
 
 ## Mathematical Operations
 
@@ -281,7 +49,7 @@ x == y	evaluates to a Boolean, true if x equals y, false otherwise
 x != y 	evaluates to a Boolean, true if x does not equal y, false otherwise
 
 
-x y		evaluates to a Boolean, true if x is greater than y, false otherwise
+x > y		evaluates to a Boolean, true if x is greater than y, false otherwise
 
 
 x < y		evaluates to a Boolean, true if x is less than y, false otherwise
@@ -310,6 +78,364 @@ sin(pi/2)
 
 
 
+**First set working directory, by "Session -Set Working Directory" **
+
+
+## Data type 
+
+R has five basic or "atomic" classes of objects:
+
+* character
+
+* numeric (real numbers)
+
+* integer
+
+* complex
+
+* logical (True/False)
+
+
+```{r}
+x <- c(0.5, 0.6);  typeof(x)       ## numeric
+x <- c(TRUE, FALSE);  typeof(x)    ## logical
+x <- c(T, F);   typeof(x)         ## logical
+x <- c("a", "b", "c");  typeof(x)   ## character
+x <- c(1+0i, 2+4i);  typeof(x)    ## complex
+x <- 9:29;   typeof(x)            ## integer
+```
+
+
+`":"` operator can create a sequence which is very useful.
+
+
+`seq()` can do similar thing and is more powerful.
+
+```{r}
+seq(9,29, by=2)
+```
+
+
+
+## Data Structure
+
+
+### Vector
+
+
+The most basic type of R object is a vector. Empty vectors can be created with the vector() function or c() function. There is really only one rule about vectors in R, which is that A **vector can only contain objects of the same class**.
+
+You can also use the vector() function to initialize vectors.
+
+
+```{r}
+x <- vector("numeric", length = 10) 
+x
+```
+
+
+Question 1: Generate a vector 
+
+$$a =  (3, 6, 9 ,12) $$
+
+```{r q1}
+# type your code for Question 1 here, and Knit
+
+
+
+
+```
+
+
+
+
+
+**A vector can only contain objects of the same class.**
+
+
+
+**A matrix can only contain objects of the same class.**
+
+
+
+
+### Matrix
+
+Initial a empty matrix
+
+```{r}
+m <- matrix(nrow = 2, ncol = 3) 
+m
+```
+
+**vector -> matrix**
+
+Matrices can be created by column-binding or row-binding with the cbind() and rbind() functions.
+
+
+```{r}
+x <- 1:3
+y <- 10:12
+cbind(x, y)
+```
+
+
+
+```{r}
+rbind(x, y) 
+```
+
+
+Question 2: Generate a matrix  
+
+\begin{matrix}
+  1 & 2 & 3 \\
+  4 & 5 & 6 \\
+  7 & 8 & 9
+\end{matrix}
+
+```{r q2}
+# type your code for Question 1 here, and Knit
+
+
+
+
+```
+
+
+
+
+
+
+### Data Frames
+
+
+Data frames can contain objects of different classes.
+
+Data frames are used to store tabular data in R. They are an important type of object in R and are used in a variety of statistical modeling applications. 
+
+
+
+```{r}
+x <- data.frame(foo = 1:4, bar = c(T, T, F, F)) 
+x
+```
+
+
+
+## Check what is inside an object
+
+
+```{r}
+length(y)
+dim(y)
+str(y)
+attributes(y)
+typeof(y)
+head(y, 1)
+tail(y,1)
+```
+
+
+More for data frame.
+
+```{r}
+nrow(x)
+
+ncol(x)
+
+names(x)
+```
+
+
+
+Using `str()` function to check `x`.
+
+```{r}
+str(x)
+```
+
+* What class is the `foo` column?
+
+* What class is the `bar` column?
+
+
+** Different classes of data can be in a data frame**
+
+
+
+## Load Data from Csv File
+
+R works with many data formats. 
+
+csv file is the most convenient.
+
+
+### Load data locally 
+
+
+Download file from [here][3]
+
+
+```{r}
+if (!file.exists("All_pokemon.csv")){
+   download.file("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv", destfile = "All_pokemon.csv",method="wininet")
+}
+
+```
+
+
+
+```{r}
+pokemon <- read.csv("All_pokemon.csv")
+```
+
+
+
+Check data
+
+```{r}
+head(pokemon)
+```
+
+
+```{r}
+str(pokemon)
+```
+
+
+
+###  directly from online repository.
+
+
+
+```{r}
+#library(readr) # prefered
+#pokemon <- read_csv("https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv")
+```
+
+
+
+More information about [pokeman][1] 
+
+![Bulbasaur][2]
+
+
+
+### Subsetting
+
+
+#### Indexing
+
+
+Indexing is used to specify the elements of an array. Indexing also allows you to get out certain bits of information from an array. To index into an array, type the name of the array, followed by the index of the element you want in brackets. Note that in R, indices start at 1. 
+
+For a multidimensional array, index by [row,column]
+
+To index an entire row or column, use a colon.
+
+Below we index into the named y to get out the element in the second row, third column, 6.
+
+
+```{r}
+y <- c( 1,2,3, 4,5,6)
+y <- matrix(y, nrow = 2, ncol = 3, byrow = T)
+y[2,3]
+```
+
+
+
+If you want to change the value in y[2,3], you can assign a new value to it.
+
+
+```{r}
+y[2,3] <- 7
+y
+```
+
+
+
+Below, we index the entire first row of the array named y.
+
+
+```{r}
+y[1,]
+```
+
+
+Below, we index the entire second column of the array named y.
+
+
+```{r}
+y[,2]
+```
+
+
+#### Subset   by name,
+    
+For data frame, `$` to subset
+
+```{r}
+type2 <- pokemon$Type.II
+head(type2)
+```
+
+
+Look those levels
+
+```{r}
+table(type2)
+```
+
+
+
+
+
+#### Subset by logic indexing or comparison operations
+
+```{r}
+Dragon <-  pokemon[ pokemon$Type.I == "Dragon", ]
+
+head(Dragon)
+
+```
+
+
+Question 3: Subset pokeman with HP greater than 150 and write to HP.csv 
+
+
+
+```{r  q3}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+### Write data
+
+
+```{r}
+#if (!file.exists("Dragon.csv")){
+write.csv(Dragon, file="Dragon.csv")
+#}
+```
+
+
+By default R will wrap character vectors with quotation marks when writing out to file. It will also write out the row and column names.
+
+Let's fix this:
+
+
+```{r}
+#if (!file.exists("Dragon.csv")){
+write.csv(Dragon,file="Dragon.csv",
+          quote=FALSE, row.names=FALSE)
+#}
+```
+
+
 
 ## Control Flow
 
@@ -335,6 +461,19 @@ if (x<y){
 
 
 
+
+Question 4: Write a if else statement to  print larger number in x and y. 
+
+
+```{r  q4}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+
 ### For Loops 
 
 A for loop allows you to specify the number of iterations for the repeated execution of a code block. They are great when you know how many iterations you want to run. 
@@ -351,13 +490,87 @@ for(num in 1:10){
 print(sum)
 ```
 
+Repeat an operation until a certain condition is met. 
 
-A range of integers, we use the colon : symbol. 
+
+For example, generates random numbers from a uniform distribution (the runif() function) between 0 and 1 until it gets one that¡¯s less than 0.1.
 
 ```{r}
-1:10
+z <- 1
+while(z > 0.1){
+  z <- runif(1)
+  print(z)
+}
 ```
 
+
+Question 5: Write a for loop statement to print 1 to 10
+
+
+```{r  q5}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+
+## Plot 
+
+```{r}
+x = seq(0, 2*pi, 2*pi/180)
+y = sin(x)
+plot(x,y)
+
+```
+
+
+#### Color, line type, line width and title
+```{r}
+plot(x,y, type = "l", col="blue", lwd="4",
+     main="sin", xlab = "x", ylab = "y")
+```
+
+### Add two lines and a point.
+
+
+```{r}
+plot(x,y, type = "l", col="blue", lwd="4",
+     main="sin", xlab = "x", ylab = "y")
+## the x- and y-axis, and an integer grid
+abline(h = 0, v = pi, col = "gray60")
+points(x=pi, y=0, cex =2, col ="dark red")
+text(x=pi+0.3, y = 0.1, labels = "Here", col = "Red")
+```
+
+
+
+Question 6: Plot pokemon's HP and Atk with green color.
+Change label and title.
+
+
+```{r  q6}
+# type your code for Question 1 here, and Knit
+
+
+```
+
+
+
+
+### How to get help
+
+
+```{r}
+#?plot
+```
+
+
+
+### Learn by doing
+
+Visit [DataCamp][5] or [Try R][6] to learn how to write basic R code. Both sites provide interactive lessons that will get you writing real code in minutes. They are a great place to make mistakes and test out new skills. You are told immediately when you go wrong and given a chance to fix your code.
 
 ### A series of video of R tutorial. 
 
@@ -366,221 +579,6 @@ Each tutorial usually only is 2 minutes long.
 http://www.twotorials.com/
 
 
-## R for ECON
-
-### R for ECON365/366
-
-Matrix transposition
-
-```{r}
-M <- cbind(c(1,0,1),c(0,1,2),c(0,0,1))
-t(M)
-
-```
-
-Matrix inversion
-
-```{r}
-solve(M)
-
-solve(M)%*%M
-```
-
-
-Regression for Salary
-```{r}
-
-```
-
-
-### R for ECON208
-
-Solving a linear equation
-```{r}
-m=matrix(nrow=2,ncol=2,c(1,-.8,1,.2))
-
-l=matrix(c(1.0+25.0/18,25.0/18.0))
-
-(k=solve(m,l))
-
-m%*%k          #checking the answer
-
-
-```
-
-Eigenvalues and eigenvectors
-
-```{r}
-eigen(m)
-```
-
-
-
-### R for ECON350/351
-
-Symbolic calculations
-
-```{r}
-D(expression(x^n),"x")
-D(expression(exp(a*x)),"x")
-```
-
-
-Compute derivatives of simple expressions, symbolically and algorithmically.
-
-
-```{r}
-trig.exp <- expression(sin(cos(x + y^2)))
-
-( D.sc <- D(trig.exp, "x") )
-
-all.equal(D(trig.exp[[1]], "x"), D.sc)
-```
-
-
-
-```{r}
-## formula argument :
-(MU1 <- deriv(~ x1^0.25*x2^0.25, "x1" )) ; 
-(MU2<- deriv(~ x1^0.25*x2^0.25, "x1" ))
-
-mode(MU1)
-x1<- 2
-x2 <- 2
-eval(MU1)
-
-
-
-```
-
-
-
-#### Unconstrained optimization
-
-```{r}
-f <- function(x){(x[1] - 5)^2 + (x[2] - 6)^2}
-initial_x <- c(10, 11)
-x_optimal <- optim(initial_x, f, method="CG")
-x_min <- x_optimal$par
-x_min
-```
-
-## ECON457
-
-#### Equality constraint optimization
-#### Inequality constraint optimization
-#### Linear Programming
-
-
-Maximize expected return: f(x1, x2, x3) = x1*5% + x2*4% + x3*6%
-
-Subjected to constraints:
-    10% < x1, x2, x3 < 100%
-    x1 + x2 + x3 = 1
-    x3 < x1 + x2
-    x1 < 2 * x2
-
-```{r}
-#install.packages("lpSolve")
-#install.packages("lpSolveAPI")
-library(lpSolve)
-library(lpSolveAPI)
-# Set the number of vars
-model <- make.lp(0, 3)
-# Define the object function: for Minimize, use -ve
-set.objfn(model, c(-0.05, -0.04, -0.06))
-# Add the constraints
-add.constraint(model, c(1, 1, 1), "=", 1)
-add.constraint(model, c(1, 1, -1), ">", 0)
-add.constraint(model, c(1, -2, 0), "<", 0)
-# Set the upper and lower bounds
-set.bounds(model, lower=c(0.1, 0.1, 0.1), upper=c(1, 1, 1))
-# Compute the optimized model
-solve(model)
-
-# Get the value of the optimized parameters
-get.variables(model)
-
-# Get the value of the objective function
-get.objective(model)
-
-# Get the value of the constraint
-get.constraints(model)
-```
-
-#### Quadratic Programming
-
-
-To formulate the problem:
-
-Variable: x1 = % investment in A, x2 = % in B, x3 = % in C
-
-Minimize variance: xTâˆ‘x
-
-Subjected to constraint:
-x1 + x2 + x3 == 1
-X1*5% + x2*4% + x3*6% >= 5.2%
-0% < x1, x2, x3 < 100%
-
-```{r}
-#install.packages("quadprog")
-library(quadprog)
-mu_return_vector <- c(0.05, 0.04, 0.06) 
-sigma <- matrix(c(0.01, 0.002, 0.005, 
-                   0.002, 0.008, 0.006, 
-                   0.005, 0.006, 0.012), 
-                  nrow=3, ncol=3)
-D.Matrix <- 2*sigma
-d.Vector <- rep(0, 3)
-A.Equality <- matrix(c(1,1,1), ncol=1)
-A.Matrix <- cbind(A.Equality, mu_return_vector, 
-                    diag(3))
-b.Vector <- c(1, 0.052, rep(0, 3))
-out <- solve.QP(Dmat=D.Matrix, dvec=d.Vector, 
-                  Amat=A.Matrix, bvec=b.Vector, 
-                  meq=1)
-out$solution
-
-out$value
-
-```
-
-
-[source][4]
-
-### Ryacas: Symbolic calculation
-
-only works for R 3.3.2
-
-```{r}
-# options(repos = c(CRAN = "http://cran.rstudio.com"))
-# install.packages('Ryacas')
-# library(Ryacas)
-# yacasInstall()
-```
-
-
-
-### R for ECON435/468
-
-http://www.quantmod.com/
-https://www.youtube.com/watch?v=61_F2fcvrsw
-
-```{r}
-install.packages("quantmod")
-library(quantmod)
-getSymbols(c("AMZN"))
-barChart(AMZN,theme='white.mono',bar.type='hlc')
-
-```
-
-
-
-```{r}
-getSymbols(c("^GSPC"))
-chartSeries(GSPC, subset='last 3 months')
-addBBands(n = 20, sd = 2, ma = "SMA", draw = 'bands', on = -1)
-```
 
 See what packages we used.
 
@@ -592,4 +590,8 @@ sessionInfo()
 [1]:http://www.levelbased.com/guides/pokemon-go/pokemon/?q=
 [2]: http://www.levelbased.com/static/images/guides/pokemon-go/1/medium/bulbasaur.png "Bulbasaur"
 [3]: https://github.com/Eighty20/eighty20.github.io/raw/master/_rmd/Post_data/All_pokemon.csv "Pokeman.csv" 
-[4]: http://horicky.blogspot.ca/2013/01/optimization-in-r.html
+
+
+[5]:https://www.datacamp.com/
+[6]:http://tryr.codeschool.com/
+
