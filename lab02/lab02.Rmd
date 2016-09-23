@@ -8,14 +8,37 @@ output: html_document
 
 ### A series of video of R tutorial. 
 
-Each tutorial usually only is 2 minutes long.
 
-http://www.twotorials.com/
+[MarinStatsLectures](https://www.youtube.com/user/marinstatlectures/videos)
 
 
 ## R for ECON
 
-### R for ECON365/366
+### R for ECON345
+
+```{r}
+library(foreign)
+wage1 <- read.dta("http://fmwww.bc.edu/ec-p/data/wooldridge/wage1.dta")
+
+# OLS regression:
+ols.model <-  lm(log(wage) ~ educ+exper+tenure, data=wage1) 
+
+```
+
+```{r}
+# Different functions to work with the model
+# Print a summary of the results
+summary(ols.model)
+
+# Produce confidence intervals
+confint(ols.model)
+
+# Get a vector of the coefficients
+coef(ols.model)
+```
+
+
+### R for ECON345/365/366
 
 Matrix transposition
 
@@ -112,6 +135,8 @@ x_min <- x_optimal$par
 x_min
 ```
 
+
+
 ## ECON457
 
 #### Equality constraint optimization
@@ -162,7 +187,7 @@ To formulate the problem:
 
 Variable: x1 = % investment in A, x2 = % in B, x3 = % in C
 
-Minimize variance: xT∑x
+Minimize variance: x
 
 Subjected to constraint:
 x1 + x2 + x3 == 1
