@@ -1,0 +1,5 @@
+Nat,Pokemon,HP,Atk,Def,SA,SD,Spd,Total,Type.I,Type.II,Gender,Evolves.From,lvl_up,Evolves.Into
+113,Chansey,250,5,5,35,105,50,450,Normal,,F (100%),Happiny,Friendship,Blissey
+143,Snorlax,160,110,65,65,110,30,540,Normal,,M (87.5%),Munchlax,--,--
+202,Wobbuffet,190,33,58,33,58,33,405,Psychic,,50/50,Wynaut,--,--
+242,Blissey,255,10,10,75,135,55,540,Normal,,F (100%),Chansey,--,--

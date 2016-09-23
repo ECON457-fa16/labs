@@ -1,7 +1,7 @@
 ---
-title: "ECON457 lab01 R Basic"
+title: "ECON457 lab02 R For Economics"
 author: "Jon"
-date: "September 13, 2016"
+date: "September 23, 2016"
 output: html_document
 ---
 
@@ -56,11 +56,6 @@ solve(M)
 solve(M)%*%M
 ```
 
-
-Regression for Salary
-```{r}
-
-```
 
 
 ### R for ECON208
@@ -225,10 +220,19 @@ out$value
 only works for R 3.3.2
 
 ```{r}
-# options(repos = c(CRAN = "http://cran.rstudio.com"))
-# install.packages('Ryacas')
+# # options(repos = c(CRAN = "http://cran.rstudio.com"))
+# # install.packages('Ryacas')
 # library(Ryacas)
-# yacasInstall()
+# 
+# #package?Ryacas
+# print(yacas(expression(integrate(1/x, x))))
+# print(yacas("Integrate(x) 1/x"))
+# x <- Sym("x"); Integrate(1/x, x)
+# acos(Sym("1/2"))
+# my_func <- function(x) {
+#     return(x/(x^2 + 3))
+# }
+# my_deriv <- yacas(deriv(my_func(x), x))
 ```
 
 
@@ -239,7 +243,7 @@ http://www.quantmod.com/
 https://www.youtube.com/watch?v=61_F2fcvrsw
 
 ```{r}
-install.packages("quantmod")
+#install.packages("quantmod")
 library(quantmod)
 getSymbols(c("AMZN"))
 barChart(AMZN,theme='white.mono',bar.type='hlc')

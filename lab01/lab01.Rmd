@@ -1,17 +1,19 @@
 ---
-title: "ECON457 lab01 R Basic"
+title: "ECON457 lab02 R Basic"
 author: "Jon"
-date: "September 16, 2016"
-#output: html_document
-output: statsr:::statswithr_lab
-
+date: "September 23, 2016"
+output: html_document
+#output: statsr:::statswithr_lab
 ---
 
 
 ```{r ,echo=FALSE, include = FALSE}
-#library(devtools)
-#install.packages("httpuv")
-#install_github("StatsWithR/statsr")
+# install.packages("devtools")
+# library(devtools)
+# install.packages("curl", repos="http://cran.rstudio.com/", dependencies=TRUE)
+# install.packages("httpuv")
+# install_github("StatsWithR/statsr")
+# install.packages("swirl", repos="http://cran.rstudio.com/", dependencies=TRUE)
 ```
 
 
@@ -108,15 +110,6 @@ x <- 9:29;   typeof(x)            ## integer
 ```
 
 
-`":"` operator can create a sequence which is very useful.
-
-
-`seq()` can do similar thing and is more powerful.
-
-```{r}
-seq(9,29, by=2)
-```
-
 
 
 ## Data Structure
@@ -134,6 +127,30 @@ You can also use the vector() function to initialize vectors.
 x <- vector("numeric", length = 10) 
 x
 ```
+
+```{r}
+y <-  c(1,2,3,4,5,6,7,8,9)
+y
+```
+
+
+`":"` operator can create a sequence which is very useful.
+
+
+```{r}
+x <- 1:10
+x
+```
+
+
+`seq()` can do similar thing and is more powerful.
+
+```{r}
+y <- seq(9,29, by=2)
+y
+```
+
+
 
 
 1. Question 1: Generate a vector 
@@ -188,16 +205,20 @@ rbind(x, y)
 ```
 
 
+
+
 2. Question 2: Generate a matrix  
 
-\begin{matrix}
+
+
+$$\begin{matrix}
   1 & 2 & 3 \\
   4 & 5 & 6 \\
   7 & 8 & 9
-\end{matrix}
+\end{matrix}$$
 
 ```{r q2}
-# type your code for Question 1 here, and Knit
+# type your code for Question 2 here, and Knit
 
 
 
@@ -403,16 +424,6 @@ head(Dragon)
 ```
 
 
-3. Question 3: Subset pokeman with HP greater than 150 and write to HP.csv 
-
-
-
-
-```{r  q3}
-# type your code for Question 1 here, and Knit
-
-
-```
 
 
 
@@ -438,6 +449,16 @@ write.csv(Dragon,file="Dragon.csv",
 #}
 ```
 
+3. Question 3: Subset pokeman with HP greater than 150 and write to HP150.csv 
+
+
+
+
+```{r  q3}
+# type your code for Question 3 here, and Knit
+
+
+```
 
 
 ## Control Flow
@@ -469,7 +490,7 @@ if (x<y){
 
 
 ```{r  q4}
-# type your code for Question 1 here, and Knit
+# type your code for Question 4 here, and Knit
 
 
 ```
@@ -511,7 +532,7 @@ while(z > 0.1){
 
 
 ```{r  q5}
-# type your code for Question 1 here, and Knit
+# type your code for Question 5 here, and Knit
 
 
 ```
@@ -545,10 +566,10 @@ my_sum(3, 5)
 6. Question 6: Creat a function to calculate logistic function
 
 
-
+$${\displaystyle f(x)={\frac {1}{1+e^{-x}}}}.$$
 
 ```{r  q6}
-# type your code for Question 1 here, and Knit
+# type your code for Question 6 here, and Knit
 
 
 ```
@@ -591,12 +612,12 @@ text(x=pi+0.3, y = 0.1, labels = "Here", col = "Red")
 
 
 
-7. Question 7: Plot pokemon's HP and Atk with green color.
+7. Question 7: Plot pokemon's HP and Atk with pionts in green color.
 Change label and title.
 
 
 ```{r  q7}
-# type your code for Question 1 here, and Knit
+# type your code for Question 7 here, and Knit
 
 
 ```
@@ -641,6 +662,76 @@ See what packages we used.
 sessionInfo()
 ```
 
+### Answer
+
+#### question 1
+
+```{r}
+a <- c(3,6,9,12)
+#or
+a <- seq(3,12,3)
+a
+```
+
+#### question 2
+
+```{r}
+A <- matrix(c(1,2,3, 4,5,6, 7,8 ,9), nrow = 3, ncol = 3, byrow = T)
+A
+```
+
+
+#### question 3
+
+```{r}
+HP150 <-  pokemon[ pokemon$HP > 150, ]
+write.csv(HP150, file="HP150.csv",
+          quote=FALSE,
+          row.names=FALSE)
+```
+
+#### question 4
+
+```{r}
+x =1
+y=2
+if (x>y){
+  print(x)
+}else{
+  print(y)
+}
+```
+
+
+#### question 5
+
+```{r}
+for (i in 1:10){
+  print(i)
+}
+```
+
+
+
+#### question 6
+
+```{r}
+logistic <- function(x){
+  f <- 1/(1+ exp(-x))
+  return(f)
+}
+```
+
+#### question 7
+
+```{r}
+
+plot(pokemon$HP,  pokemon$Atk , type = "p", col="green", lwd="4",
+     main="Pokemon", xlab = "HP", ylab = "Atk")
+```
+
+
+
 
 [1]:http://www.levelbased.com/guides/pokemon-go/pokemon/?q=
 [2]: http://www.levelbased.com/static/images/guides/pokemon-go/1/medium/bulbasaur.png "Bulbasaur"
@@ -649,4 +740,6 @@ sessionInfo()
 
 [5]:https://www.datacamp.com/
 [6]:http://tryr.codeschool.com/
+
+
 

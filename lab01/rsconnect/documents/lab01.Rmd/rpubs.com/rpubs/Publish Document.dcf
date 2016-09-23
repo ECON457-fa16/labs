@@ -1,7 +1,7 @@
 name: Publish Document
 account: rpubs
 server: rpubs.com
-appId: https://api.rpubs.com/api/v1/document/209681/4d7341fd25434f669ecabb205b6ae2bb
-bundleId: https://api.rpubs.com/api/v1/document/209681/4d7341fd25434f669ecabb205b6ae2bb
-url: http://rpubs.com/jonduan/209681
-when: 1474040231.84698
+bundleId:
+        https://api.rpubs.com/api/v1/document/211735/17c4dfea6f7d49f59a68dc523c1462dc
+url: http://rpubs.com/jonduan/211735
+when: 1474606326.70984
