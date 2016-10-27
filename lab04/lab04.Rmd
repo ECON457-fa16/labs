@@ -1,0 +1,86 @@
+---
+title: "ECON457 R lab 04 Data Scrping in R"
+output: html_notebook
+---
+
+
+
+
+This is an tutorial about data scraping in R using rvest package.
+
+  - [Web scraping with R and rvest (includes video & code)](http://www.computerworld.com/article/2909560/business-intelligence/web-scraping-with-r-and-rvest-includes-video-code.html) 
+
+
+ - [Web scraping in R: A tutorial using Super Bowl Data](https://rpubs.com/Radcliffe/superbowl)
+
+
+```{r}
+library(rvest)
+library(stringr)
+library(tidyr)
+```
+
+
+We use the read_html function to read a web page. This function is provided by the xml2 package, which was loaded automatically when we loaded rvest.
+
+
+```{r}
+
+
+url <- 'http://espn.go.com/nfl/superbowl/history/winners'
+webpage <- read_html(url)
+```
+
+Next, we use the functions html_nodes and html_table (from rvest) to extract the HTML table element and convert it to a data frame.
+
+
+```{r}
+library(DT)           # for printing nice HTML output tables
+sb_table <- html_nodes(webpage, 'table')
+sb <- html_table(sb_table)[[1]]
+#head(sb)
+
+datatable(sb, caption = 'Table 1: Not clean and tidy data.')
+```
+
+We remove the first two rows, and set the column names.
+
+```{r}
+
+
+sb <- sb[-(1:2), ]
+names(sb) <- c("number", "date", "site", "result")
+#head(sb)
+datatable(sb, caption = 'Table 2: Improvment to clean and tidy data.')
+```
+
+
+
+
+
+It is traditional to use Roman numerals to refer to Super Bowls, but Arabic numerals are more convenient to work with. We will also convert the date to a standard format.
+
+
+
+
+```{r}
+library(lubridate) # easy to parse datetime data
+sb$number <- 1:49
+
+#sb$date <- as.Date(sb$date, "%B. %d, %Y")
+sb$date <- mdy(sb$date)
+
+#head(sb)
+datatable(sb, caption = 'Table 3: Improvment to clean and tidy data.')
+```
+
+
+The result column should be split into four columns as the winning teams name, the winners score, the losing teams name, and the losers score. We start by splitting the results column into two columns at the comma. This operation uses the separate function from the tidyr package.
+
+
+```{r}
+sb <- separate(sb, result, c('winner', 'loser'), sep=', ', remove=TRUE)
+#head(sb)
+datatable(sb, caption = 'Table 4: Clean and tidy data.')
+```
+
