@@ -1,6 +1,8 @@
 ---
 title: "ECON457 R lab 04 Data Scrping in R"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 
@@ -25,8 +27,6 @@ We use the read_html function to read a web page. This function is provided by t
 
 
 ```{r}
-
-
 url <- 'http://espn.go.com/nfl/superbowl/history/winners'
 webpage <- read_html(url)
 ```
@@ -65,7 +65,7 @@ It is traditional to use Roman numerals to refer to Super Bowls, but Arabic nume
 
 ```{r}
 library(lubridate) # easy to parse datetime data
-sb$number <- 1:49
+sb$number <- 1:50
 
 #sb$date <- as.Date(sb$date, "%B. %d, %Y")
 sb$date <- mdy(sb$date)
