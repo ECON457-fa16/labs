@@ -1,0 +1,685 @@
+---
+title: "ECON457 R lab 3 Optimization in R"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Information about optimizaion in R
+
+http://cran.r-project.org/web/views/Optimization.html
+
+https://www.rdocumentation.org/packages/ROI/versions/0.2-1
+
+
+## The R Optimization Infrastructure (ROI)
+
+The R Optimization Infrastructure (ROI) package promotes the development and use of interoperable (open source) optimization problem solvers for R.
+
+
+ROI handle LP up to MILP and MIQCP problems using the following supported solvers :
+
+1. lpSolve
+
+2. quadprog
+
+3. Rcplex
+
+4. Rglpk (default)
+
+5. Rsymphony
+
+more... 
+
+
+
+
+## Solvers
+
+CPLEX is a commercial solver. Students can get academic license. 
+
+GLPK is free. R has the high level interface Rglpk.
+
+http://winglpk.sourceforge.net/
+
+https://cran.r-project.org/web/packages/Rglpk/index.html
+
+
+
+## Install all the packages.
+
+```{r}
+#install.packages("ROI")
+#install.packages(c( "Rglpk","ROI.plugin.symphony","ROI.plugin.glpk","ROI.plugin.quadprog","ROI.plugin.nloptr","ROI.plugin.ipop","ROI.plugin.ecos"))
+```
+
+
+
+
+## Linear Progarmming
+
+
+
+
+
+```{r}
+
+
+library("ROI")
+
+#library("ROI.plugin.glpk")
+#library("ROI.plugin.symphony")
+#library(ROI.plugin.ipop)
+
+#library(ROI.plugin.nloptr)
+#library(ROI.plugin.quadprog)
+#library(ROI.plugin.ecos)
+
+ROI_registered_solvers()
+```
+
+
+
+$$\begin{align*} 
+    \text{maximize: }   2 x_1 &+ 4 x_2 + 3 x_3\\
+\text{subject to: }     3 x_1 &+ 4 x_2 + 2 x_3 & <= 60 \\
+                        2 x_1 &+   x_2 +   x_3 & <= 40 \\
+                          x_1 &+ 3 x_2 + 2 x_3 & <= 80
+
+\end{align*}$$
+
+
+
+
+```{r}
+## Simple linear program.
+## maximize:   2 x_1 + 4 x_2 + 3 x_3
+## subject to: 3 x_1 + 4 x_2 + 2 x_3 <= 60
+##             2 x_1 +   x_2 +   x_3 <= 40
+##               x_1 + 3 x_2 + 2 x_3 <= 80
+##               x_1, x_2, x_3 are non-negative real numbers
+
+LP <- OP( c(2, 4, 3),
+          L_constraint(L = matrix(c(3, 2, 1, 4, 1, 3, 2, 2, 2), nrow = 3), # linear constraint
+                       dir = c("<=", "<=", "<="), # direction
+                       rhs = c(60, 40, 80)),      # right hand side
+          max = TRUE )
+LP
+```
+
+#### Solve
+
+```{r}
+sol <- ROI_solve(LP)# , solver = "glpk")
+sol
+```
+
+#### Solutions
+
+```{r}
+solution(sol, type = c("primal"))
+solution(sol, type = c("dual"))
+```
+
+
+#### Extract solutions
+```{r}
+sol$solution
+sol$objval
+sol$status
+sol$message
+```
+
+## Quadratic Progarmming
+
+
+It will require putting problem in matrix form.
+
+
+
+$$\begin{align*} 
+    \text{minimize: }   - 5 x_2 + 1/2 (x_1^2 + x_2^2 + x_3^2)\\
+\text{subject to: }     -4 x_1 - 3 x_2       & >= -8 \\
+                         2 x_1 +   x_2       & >= 2 \\
+                         - 2 x_2 + x_3 & >= 0
+
+\end{align*}$$
+
+
+
+```{r}
+## Simple quadratic program.
+## minimize: - 5 x_2 + 1/2 (x_1^2 + x_2^2 + x_3^2)
+## subject to: -4 x_1 - 3 x_2       >= -8
+##              2 x_1 +   x_2       >=  2
+##                    - 2 x_2 + x_3 >=  0
+
+QP <- OP( Q_objective (Q = diag(1, 3), L = c(0, -5, 0)),   # quadratic objective
+          L_constraint(L = matrix(c(-4,-3,0,2,1,0,0,-2,1), #  linear constraint
+                                  ncol = 3, byrow = TRUE), 
+                       dir = rep(">=", 3), 
+                       rhs = c(-8,2,0)) )
+QP
+```
+
+#### Solve
+
+```{r}
+sol <- ROI_solve(QP, solver = "quadprog")
+sol
+```
+
+
+#### Extract solutions
+```{r}
+sol$solution
+sol$objval
+sol$status
+sol$message
+```
+
+
+#### Solutions
+
+```{r}
+solution(sol, type = c("primal"))
+solution(sol, type = c("dual"))
+```
+
+
+
+## Portfolio optimization - minimum variance
+
+```{r}
+## Portfolio optimization - minimum variance
+## -----------------------------------------
+## get monthly returns of 30 US stocks
+data( US30 )
+r <- na.omit( US30 )
+## objective function to minimize
+obj <- Q_objective( 2*cov(r) ) # quadratic objective
+## full investment constraint
+full_invest <- L_constraint( rep(1, ncol(US30)), "==", 1 ) #  linear constraint
+## create optimization problem / long-only
+
+(op <- OP( objective = obj, constraints = full_invest )) 
+```
+
+#### Solution
+
+
+```{r}
+
+## solve the problem - only works if a QP solver is registered
+##  
+res <- ROI_solve( op )
+res
+sol <- solution( res )
+names( sol ) <- colnames( US30 )
+round( sol[ which(sol > 1/10^6) ], 3 )
+```
+
+
+
+
+### LP with boundary
+
+
+```{r}
+suppressMessages(library(ROI))
+lp_obj <- L_objective(c(1, 2)) #  linear objective
+ lp_con <- L_constraint(c(1, 1), dir="==", rhs=2)  #  linear constraint
+ lp_bound <- V_bound(ui=1:2, ub=c(3, 3))
+ #ui an integer vector specifying the indices of non-standard (i.e., values != Inf) upper bounds.
+ # ub up bound
+ lp <- OP(objective=lp_obj, constraints=lp_con, bounds=lp_bound, maximum=FALSE)
+ bounds(lp)
+lp
+```
+
+ 
+#### Solutions 
+ 
+```{r}
+ x <- ROI_solve(lp)
+ x$objval
+ x$solution
+```
+
+####  Change boundary 
+
+```{r}
+# change boundary 
+ bounds(lp) <- V_bound(ui=1:2, ub=c(1, 1))
+
+```
+
+
+#### Solutions 
+
+```{r}
+ y <- ROI_solve(lp)
+ y$objval
+ y$solution
+```
+
+
+--------------------------------------------------------------------------------------------
+
+## Other optimization package in R
+
+
+We also can solve optimization problem using other packages.
+
+### Install packages
+
+```{r}
+#install.packages(c("lpSolve", "lpSolveAPI"))
+#install.packages(c("quadprog","Rglpk", "nlme"))
+```
+
+
+
+```{r}
+
+suppressMessages(library(lpSolve))
+
+suppressMessages(library(lpSolveAPI))
+suppressMessages(library(quadprog))
+#suppressMessages(library(nlme))
+
+suppressMessages(library(Rglpk))
+```
+
+```{r}
+args(lp)
+args(solve.QP)
+args(Rglpk_solve_LP)
+#args(nlminb)
+#args(optim)
+#args(Rcplex)
+```
+
+
+###  Linear Programming by lpsolve
+
+Here is a list of some key features of lp_solve:
+
+- Mixed Integer Linear Programming (MILP) solver
+
+- Basically no limit on model size
+
+- It is free and with sources
+
+- Supports Integer variables, Semi-continuous variables and Special Ordered Sets
+
+
+#### Example by lpSolveAPI
+
+straightforward
+
+
+
+$$\begin{align*} 
+    \text{minimize: }   x_1 + 3 x_2 + 6.24 x_3 + 0.1 x_4\\
+    \text{subject to: }     78.26 x_2 + 2.9 x_4       & >= 92.3 \\
+                         0.2 x_1 +  11.91 x_3       & <= 14.8 \\
+                         12.68 x_1 + 0.08 x_3 + 0.9 x_4 &>= 4 \\
+                        18  <=  x_4 & <= 48.98 \\
+                          x_1 & >=  28.6 
+\end{align*}$$
+
+
+##### Set up model
+
+```{r}
+library(lpSolveAPI)
+#create an empty model
+lpmodel <- make.lp(nrow =0, ncol= 4)
+# nrow	: # a nonnegative integer value specifying the number of constaints in the linear program.
+# ncol	: # a nonnegative integer value specifying the number of decision variables in the linear program.
+
+
+```
+
+##### Setup objective function
+
+```{r}
+# object
+set.objfn(lpmodel, c(1, 3, 6.24, 0.1))
+```
+
+##### Add constraints
+
+```{r}
+
+#constraint
+add.constraint(lpmodel, c(0, 78.26, 0, 2.9), ">=", 92.3)
+add.constraint(lpmodel, c(0.24, 0, 11.31, 0), "<=", 14.8)
+add.constraint(lpmodel, c(12.68, 0, 0.08, 0.9), ">=", 4)
+
+```
+
+
+##### Set bounds
+
+```{r}
+set.bounds(lpmodel, lower = c(28.6, 18), columns = c(1, 4))
+set.bounds(lpmodel, upper = 48.98, columns = 4)
+
+```
+
+
+##### Setup names 
+
+
+```{r}
+RowNames <- c("THISROW", "THATROW", "LASTROW")
+ColNames <- c("COLONE", "COLTWO", "COLTHREE", "COLFOUR")
+dimnames(lpmodel) <- list(RowNames, ColNames)
+lpmodel
+```
+
+
+
+
+##### Solve the model
+
+```{r}
+solve(lpmodel)
+
+```
+
+
+
+##### Extract solutions
+
+
+```{r}
+get.objective(lpmodel)
+  # [1] 31.78276
+  # 
+get.variables(lpmodel)
+  # [1] 28.60000  0.00000  0.00000 31.82759
+  # 
+get.constraints(lpmodel)
+  # [1]  92.3000   6.8640 391.2928
+```
+
+
+
+#### Example by lpSolve
+
+provide a lot of information including sensitivities analysis. 
+
+$$\begin{align*} 
+    \text{maximize: }   x_1 + 9 x_2 +  x_3 \\
+    \text{subject to: }     x_1 + 2 x_2 + 3 x_3       & <= 9 \\
+                         3 x_1 + 2 x_2  + 2 x_3       & <= 15  
+\end{align*}$$
+
+
+##### Setup objective function
+
+```{r}
+library(lpSolve)
+#
+# Set up problem: maximize
+#   x1 + 9 x2 +   x3 subject to
+#   x1 + 2 x2 + 3 x3  <= 9
+# 3 x1 + 2 x2 + 2 x3 <= 15
+#
+model_obj <- c(1, 9, 1)
+```
+
+##### Setup constraints
+
+```{r}
+model_con <- matrix (c(1, 2, 3, 3, 2, 2), nrow=2, byrow=TRUE)
+model_dir <- c("<=", "<=")
+model_rhs <- c(9, 15)
+
+```
+
+##### Solve the model
+
+```{r}
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs)
+##  Success: the objective function is 40.5
+
+```
+
+
+##### Extract solutions
+
+```{r}
+
+lp ("max", model_obj, model_con, model_dir, model_rhs)$solution
+```
+
+######  Get sensitivities
+
+```{r}
+
+
+# Get sensitivities
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs, compute.sens=TRUE)$sens.coef.from
+##  [1] -1e+30  2e+00 -1e+30
+lp ("max", model_obj, model_con, model_dir, model_rhs, compute.sens=TRUE)$sens.coef.to  
+##  [1] 4.50e+00 1.00e+30 1.35e+01
+#
+# Right now the dual values for the constraints and the variables are
+# combined, constraints coming first. So in this example...
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs, compute.sens=TRUE)$duals     
+##  [1]   4.5   0.0  -3.5   0.0 -10.5
+#
+# ...the duals of the constraints are 4.5 and 0, and of the variables,
+# -3.5, 0.0, -10.5. Here are the lower and upper limits on these:
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs, compute.sens=TRUE)$duals.from
+##  [1]  0e+00 -1e+30 -1e+30 -1e+30 -6e+00
+lp ("max", model_obj, model_con, model_dir, model_rhs, compute.sens=TRUE)$duals.to  
+##  [1] 1.5e+01 1.0e+30 3.0e+00 1.0e+30 3.0e+00
+#
+
+
+```
+
+#### Intergr Programming
+
+```{r}
+# Run again, this time requiring that all three variables be integer
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs, int.vec=1:3)
+##  Success: the objective function is 37
+lp ("max", model_obj, model_con, model_dir, model_rhs, int.vec=1:3)$solution
+##  [1] 1 4 0
+#
+# You can get sensitivities in the integer case, but they're harder to
+# interpret.
+#
+lp ("max", model_obj, model_con, model_dir, model_rhs, int.vec=1:3, compute.sens=TRUE)$duals
+##  [1] 1 0 0 7 0
+#
+```
+
+
+
+
+### Quadratic Programming by quadprog
+
+
+solving quadratic programming problems of the form min(-d^T b + 1/2 b^T D b) with the constraints A^T b >= b_0.
+
+
+$$\begin{align*} 
+    \text{minimize: }   - 5 x_2 + 1/2 (x_1^2 + x_2^2 + x_3^2)\\
+\text{subject to: }     -4 x_1 - 3 x_2       & >= -8 \\
+                         2 x_1 +   x_2       & >= 2 \\
+                         - 2 x_2 + x_3 & >= 0
+
+\end{align*}$$
+
+
+
+D is diagnal matix 
+
+```{r}
+library(quadprog)
+
+## Assume we want to minimize: -(0 5 0) %*% b + 1/2 b^T D b
+## under the constraints:      A^T b >= b0
+##          1 0 0
+##      D = 0 1 0
+##          0 0 1
+## with b0 = (-8,2,0)^T
+## and      (-4  2  0) 
+##      A = (-3  1 -2)
+##          ( 0  0  1)
+## we can use solve.QP as follows:
+##
+Dmat       <- matrix(0,3,3)
+diag(Dmat) <- 1
+dvec       <- c(0,5,0)
+Amat       <- matrix(c(-4,-3,0,2,1,0,0,-2,1),3,3)
+bvec       <- c(-8,2,0)
+solve.QP(Dmat,dvec,Amat,bvec=bvec)
+
+```
+
+
+
+
+
+### Football MIP by glpk
+
+
+
+trying to pick the best possible fantasy football team given different constraints.  goal is to pick the players that maximize the sum of their projected points.
+
+The constraints are:
+
+1) The team must include:
+
+    - 1 QB
+  
+    - 2 RBs
+
+    - 2 WRs
+
+    - 1 TE
+
+2) A player's risk must not exceed 6
+
+3) The sum of the players' costs must not exceed 300. 
+
+
+```{r}
+#http://stackoverflow.com/questions/15147398/optimize-value-with-linear-or-non-linear-constraints-in-r
+
+
+
+# We are going to solve:
+# maximize f'x subject to A*x <dir> b
+# where:
+#   x is the variable to solve for: a vector of 0 or 1:
+#     1 when the player is selected, 0 otherwise,
+#   f is your objective vector,
+#   A is a matrix, b a vector, and <dir> a vector of "<=", "==", or ">=",
+#   defining your linear constraints.
+
+
+name <- c("Aaron Rodgers","Tom Brady","Arian Foster","Ray Rice","LeSean McCoy","Calvin Johnson","Larry Fitzgerald","Wes Welker","Rob Gronkowski","Jimmy Graham")
+
+
+# position
+pos <- c("QB","QB","RB","RB","RB","WR","WR","WR","TE","TE")
+
+# points
+pts <- c(167, 136, 195, 174, 144, 135, 89, 81, 114, 111) 
+
+risk <- c(2.9, 3.4, 0.7, 1.1, 3.5, 5.0, 6.7, 4.7, 3.7, 8.8) 
+
+cost <- c(60, 47, 63, 62, 40, 60, 50, 35, 40, 40) 
+
+#mydata <- data.frame(name, pos, pts, risk, cost) 
+
+# number of variables
+num.players <- length(name)
+
+
+
+# objective:
+f <- pts
+
+
+
+# the variable are booleans
+var.types <- rep("B", num.players)
+
+
+
+# the constraints
+A <- rbind(as.numeric(pos == "QB"), # num QB
+           as.numeric(pos == "RB"), # num RB
+           as.numeric(pos == "WR"), # num WR
+           as.numeric(pos == "TE"), # num TE
+           diag(risk),              # player's risk, a set of multiple constraints
+           cost)                    # total cost
+
+# diretion
+dir <- c("==",
+         "==",
+         "==",
+         "==",
+         rep("<=", num.players),
+         "<=")
+
+# rhs b vector
+b <- c(1,
+       2,
+       2,
+       1,
+       rep(6, num.players),
+       300)
+
+
+
+# solve
+library(Rglpk)
+sol <- Rglpk_solve_LP(obj = f, mat = A, dir = dir, rhs = b,
+                      types = var.types, max = TRUE)
+sol
+# $optimum
+# [1] 836                      ### <- the optimal total points
+
+
+
+# $solution
+#  [1] 1 0 1 0 1 1 0 1 1 0     ### <- a `1` for the selected players
+
+# $status
+# [1] 0                        ### <- an optimal solution has been found
+
+# your dream team
+name[sol$solution == 1]
+# [1] "Aaron Rodgers"  "Arian Foster"   "LeSean McCoy"
+# [4] "Calvin Johnson" "Wes Welker"     "Rob Gronkowski
+
+
+# total cost
+sum(cost * sol$solution)
+
+```
+
+
+
+
+
